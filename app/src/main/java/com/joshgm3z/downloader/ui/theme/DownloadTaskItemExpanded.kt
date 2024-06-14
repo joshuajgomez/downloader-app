@@ -1,39 +1,47 @@
-package com.joshgm3z.downloader.ui
+package com.joshgm3z.downloader.ui.theme
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.joshgm3z.downloader.data.DownloadTask
 import com.joshgm3z.downloader.ui.common.CustomCard
 import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId
-import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 
 
 @Preview
 @Composable
-private fun PreviewDownloadTaskItem() {
+private fun PreviewDownloadTaskItemExpanded() {
     DownloaderTheme {
-        DownloadTaskItem()
+        DownloadTaskItemExpanded()
     }
 }
 
 @Composable
-fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
+fun DownloadTaskItemExpanded(downloadTask: DownloadTask = DownloadTask.sample) {
     CustomCard {
         ConstraintLayout(
             downloadTaskConstraints(),
@@ -42,21 +50,27 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 .padding(all = 10.dp)
         ) {
 
+            Text(
+                text = "Downloading",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.layoutId(LayoutId.cardTitle)
+            )
+
             FileIcon(downloadTask.fileType)
 
             Text(
                 text = downloadTask.filename,
                 modifier = Modifier
                     .layoutId(LayoutId.fileName)
-                    .fillMaxWidth(0.7f),
+                    .fillMaxWidth(0.8f),
                 fontWeight = FontWeight.Bold,
-                maxLines = 2,
+                maxLines = 5,
                 overflow = TextOverflow.Ellipsis
             )
 
-            LinearProgressIndicator(
+            ProgressInfo(
+                modifier = Modifier.layoutId(LayoutId.progress),
                 progress = downloadTask.progress.toFloat(),
-                modifier = Modifier.layoutId(LayoutId.progress)
             )
 
             Text(
@@ -64,21 +78,8 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 modifier = Modifier
                     .layoutId(LayoutId.url)
                     .fillMaxWidth(0.8f),
-                maxLines = 1,
+                maxLines = 5,
                 overflow = TextOverflow.Ellipsis
-            )
-
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = null,
-                modifier = Modifier.layoutId(LayoutId.close)
-            )
-
-            Text(
-                text = "${downloadTask.progress.toInt()}%",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.layoutId(LayoutId.progressText),
-                color = colorScheme.primary
             )
 
             Text(
@@ -87,7 +88,40 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 modifier = Modifier.layoutId(LayoutId.size)
             )
 
+            ButtonBox(modifier = Modifier.layoutId(LayoutId.button))
+
         }
+    }
+}
+
+@Composable
+fun ButtonBox(modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Button(onClick = { /*TODO*/ }) {
+            Icon(Icons.Default.Pause, null)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = "Pause")
+        }
+        OutlinedButton(onClick = { /*TODO*/ }) {
+            Icon(Icons.Default.Delete, null)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = "Delete")
+        }
+    }
+}
+
+@Composable
+fun ProgressInfo(modifier: Modifier = Modifier, progress: Float) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(
+            progress = progress,
+            modifier = Modifier.size(95.dp)
+        )
+        Text(
+            text = "${progress.toInt()}%",
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp
+        )
     }
 }
 
@@ -98,26 +132,32 @@ private fun downloadTaskConstraints(): ConstraintSet {
         val progress = createRefFor(LayoutId.progress)
         val url = createRefFor(LayoutId.url)
         val close = createRefFor(LayoutId.close)
-        val progressText = createRefFor(LayoutId.progressText)
         val size = createRefFor(LayoutId.size)
+        val button = createRefFor(LayoutId.button)
+        val title = createRefFor(LayoutId.cardTitle)
 
-        constrain(icon) {
+        constrain(title) {
             top.linkTo(parent.top)
             start.linkTo(parent.start)
         }
 
+        constrain(progress) {
+            top.linkTo(title.bottom, 10.dp)
+            start.linkTo(parent.start)
+        }
+
+        constrain(icon) {
+            top.linkTo(progress.bottom, 15.dp)
+            start.linkTo(parent.start)
+        }
+
         constrain(fileName) {
-            top.linkTo(parent.top)
+            top.linkTo(icon.top)
             start.linkTo(icon.end, 10.dp)
         }
 
-        constrain(progress) {
-            top.linkTo(url.bottom, 10.dp)
-            start.linkTo(fileName.start)
-        }
-
         constrain(url) {
-            top.linkTo(fileName.bottom)
+            top.linkTo(fileName.bottom, 5.dp)
             start.linkTo(fileName.start)
         }
         constrain(close) {
@@ -125,12 +165,13 @@ private fun downloadTaskConstraints(): ConstraintSet {
             end.linkTo(parent.end)
         }
         constrain(size) {
-            start.linkTo(url.start)
-            top.linkTo(progressText.top)
-        }
-        constrain(progressText) {
             end.linkTo(parent.end)
-            top.linkTo(progress.bottom, 10.dp)
+            top.linkTo(parent.top)
         }
+        constrain(button) {
+            end.linkTo(parent.end)
+            top.linkTo(size.bottom, 10.dp)
+        }
+
     }
 }
