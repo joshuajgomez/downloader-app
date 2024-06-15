@@ -1,5 +1,6 @@
 package com.joshgm3z.downloader.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.height
@@ -7,10 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,7 +49,8 @@ fun NewDownload(onDownloadClick: (url: String) -> Unit = {}) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = colorScheme.surface
-        )
+        ),
+        shape = RoundedCornerShape(20.dp)
     ) {
         ConstraintLayout(
             newDownloadConstraints(),
@@ -53,6 +59,11 @@ fun NewDownload(onDownloadClick: (url: String) -> Unit = {}) {
             Text(
                 text = "Enter url for download", fontWeight = FontWeight.Bold,
                 modifier = Modifier.layoutId(LayoutId.cardTitle)
+            )
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                modifier = Modifier.layoutId(LayoutId.close)
             )
             var text by remember { mutableStateOf("") }
             CustomTextField(
@@ -115,9 +126,15 @@ private fun newDownloadConstraints() = ConstraintSet {
     val textInput = createRefFor(LayoutId.textInput)
     val button = createRefFor(LayoutId.button)
     val recentList = createRefFor(LayoutId.recentList)
+    val close = createRefFor(LayoutId.close)
+
     constrain(title) {
         top.linkTo(parent.top)
         start.linkTo(parent.start)
+    }
+    constrain(close) {
+        top.linkTo(parent.top)
+        end.linkTo(parent.end)
     }
     constrain(textInput) {
         top.linkTo(title.bottom, 20.dp)
