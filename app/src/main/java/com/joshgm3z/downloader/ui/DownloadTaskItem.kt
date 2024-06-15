@@ -1,34 +1,57 @@
 package com.joshgm3z.downloader.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import com.joshgm3z.downloader.data.DownloadState
 import com.joshgm3z.downloader.data.DownloadTask
 import com.joshgm3z.downloader.ui.common.CustomCard
 import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
-
+import com.joshgm3z.downloader.ui.theme.Green40
 
 @Preview
 @Composable
 private fun PreviewDownloadTaskItem() {
     DownloaderTheme {
-        DownloadTaskItem()
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(DownloadState.entries) {
+                Text(text = it.name, color = Color.White)
+                DownloadTaskItem(
+                    DownloadTask.sample.copy(
+                        state = it
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -48,16 +71,23 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 text = downloadTask.filename,
                 modifier = Modifier
                     .layoutId(LayoutId.fileName)
-                    .fillMaxWidth(0.7f),
+                    .fillMaxWidth(0.8f),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
+                fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis
             )
 
-            LinearProgressIndicator(
-                progress = downloadTask.progress.toFloat(),
+            val state = downloadTask.state
+            AnimatedVisibility(
+                visible = state == DownloadState.RUNNING ||
+                        state == DownloadState.PAUSED,
                 modifier = Modifier.layoutId(LayoutId.progress)
-            )
+            ) {
+                LinearProgressIndicator(
+                    progress = downloadTask.progress.toFloat(),
+                )
+            }
 
             Text(
                 text = downloadTask.url,
@@ -74,19 +104,80 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 modifier = Modifier.layoutId(LayoutId.close)
             )
 
-            Text(
-                text = "${downloadTask.progress.toInt()}%",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.layoutId(LayoutId.progressText),
-                color = colorScheme.primary
+            StateIndicator(
+                Modifier.layoutId(LayoutId.progressText),
+                downloadTask
             )
 
-            Text(
-                text = "${downloadTask.currentSize.toInt()}MB of ${downloadTask.totalSize.toInt()}MB",
-                fontWeight = FontWeight.Bold,
+            Row(
                 modifier = Modifier.layoutId(LayoutId.size)
-            )
+            ) {
+                AnimatedVisibility(
+                    visible = state == DownloadState.RUNNING ||
+                            state == DownloadState.PAUSED
+                ) {
+                    Text(
+                        text = "${downloadTask.currentSize.toInt()}MB of ",
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+                Text(
+                    text = "${downloadTask.totalSize.toInt()}MB",
+                    fontWeight = FontWeight.Bold,
+                )
+            }
 
+        }
+    }
+}
+
+@Composable
+fun StateIndicator(
+    modifier: Modifier = Modifier,
+    downloadTask: DownloadTask
+) {
+    Row(modifier) {
+        when (downloadTask.state) {
+            DownloadState.PENDING -> {
+                Icon(Icons.Default.AccessTime, null)
+            }
+
+            DownloadState.RUNNING -> {
+                Text(
+                    text = "${downloadTask.progress.toInt()}%",
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.primary
+                )
+            }
+
+            DownloadState.PAUSED -> {
+                Text(
+                    text = "Paused ${downloadTask.progress.toInt()}%",
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.primary
+                )
+                Icon(Icons.Default.Pause, null)
+            }
+
+            DownloadState.COMPLETED -> {
+                Icon(
+                    Icons.Default.CheckCircle, null,
+                    tint = Green40
+                )
+            }
+
+            DownloadState.FAILED -> {
+                Text(
+                    text = "Failed",
+                    fontWeight = FontWeight.Bold,
+                    color = colorScheme.error
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+                Icon(
+                    Icons.Default.ErrorOutline, null,
+                    tint = colorScheme.error
+                )
+            }
         }
     }
 }
@@ -130,7 +221,7 @@ private fun downloadTaskConstraints(): ConstraintSet {
         }
         constrain(progressText) {
             end.linkTo(parent.end)
-            top.linkTo(progress.bottom, 10.dp)
+            top.linkTo(progress.bottom, 5.dp)
         }
     }
 }

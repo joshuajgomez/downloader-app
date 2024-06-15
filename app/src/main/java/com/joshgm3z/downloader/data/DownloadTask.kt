@@ -9,7 +9,7 @@ data class DownloadTask(
     val totalSize: Double,
     val currentSize: Double,
     val progress: Double,
-    val downloadState: DownloadState,
+    val state: DownloadState,
     val fileType: FileType,
 ) {
     companion object {
@@ -26,7 +26,7 @@ data class DownloadTask(
                     totalSize = totalSize,
                     currentSize = currentSize,
                     progress = (currentSize / totalSize) * 100,
-                    downloadState = DownloadState.entries.random(),
+                    state = DownloadState.entries.random(),
                 )
             }
 
@@ -75,6 +75,7 @@ private val sampleFileSizes: List<Double> = listOf(
 enum class DownloadState {
     PENDING,
     RUNNING,
+    PAUSED,
     COMPLETED,
     FAILED,
 }
