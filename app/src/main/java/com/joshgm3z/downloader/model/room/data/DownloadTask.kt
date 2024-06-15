@@ -1,9 +1,14 @@
-package com.joshgm3z.downloader.data
+package com.joshgm3z.downloader.model.room.data
 
 import android.net.Uri
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlin.random.Random
 
+@Entity
 data class DownloadTask(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val url: String,
     val filename: String,
     val totalSize: Double,
@@ -13,6 +18,17 @@ data class DownloadTask(
     val fileType: FileType,
 ) {
     companion object {
+        fun new(url: String): DownloadTask = DownloadTask(
+            id = 0,
+            url = url,
+            filename = url.fileName(),
+            totalSize = 0.0,
+            currentSize = 0.0,
+            progress = 0.0,
+            state = DownloadState.PENDING,
+            fileType = FileType.UNKNOWN
+        )
+
         val sample: DownloadTask
             get() {
                 val url = sampleUrls.random()
@@ -20,6 +36,7 @@ data class DownloadTask(
                 val totalSize = sampleFileSizes.random()
                 val currentSize = totalSize - Random.nextDouble(totalSize)
                 return DownloadTask(
+                    id = 1,
                     url = url,
                     filename = url.fileName(),
                     fileType = filename.fileType(),

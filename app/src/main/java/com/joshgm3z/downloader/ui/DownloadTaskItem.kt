@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import com.joshgm3z.downloader.data.DownloadState
-import com.joshgm3z.downloader.data.DownloadTask
+import com.joshgm3z.downloader.model.room.data.DownloadState
+import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.common.CustomCard
 import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId
@@ -85,7 +85,7 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 modifier = Modifier.layoutId(LayoutId.progress)
             ) {
                 LinearProgressIndicator(
-                    progress = downloadTask.progress.toFloat(),
+                    progress = { downloadTask.progress.toFloat() },
                 )
             }
 

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.joshgm3z.downloader.data.DownloadTask
+import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 
 @Preview

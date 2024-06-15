@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import com.joshgm3z.downloader.data.DownloadTask
+import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.common.CustomCard
 import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId

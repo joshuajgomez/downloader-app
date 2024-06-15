@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,8 +25,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.joshgm3z.downloader.data.DownloadTask
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
+import com.joshgm3z.downloader.viewmodel.DownloadViewModel
 
 @Preview
 @Composable
@@ -38,9 +41,10 @@ private fun PreviewMainUi() {
 }
 
 @Composable
-fun MainUiContainer() {
+fun MainUiContainer(downloadViewModel: DownloadViewModel = hiltViewModel<DownloadViewModel>()) {
     Surface {
-        MainUi()
+        val downloadTasks = downloadViewModel.downloadTasks.collectAsState()
+        MainUi(downloadTasks.value)
     }
 }
 
@@ -56,7 +60,11 @@ private fun MainUi(downloads: List<DownloadTask> = DownloadTask.samples) {
             }
         },
     ) {
-        DownloadTaskList(it, downloads)
+        if (downloads.isEmpty()) {
+            EmptyScreen()
+        } else {
+            DownloadTaskList(it, downloads)
+        }
         if (showBottomSheet) {
             ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
                 NewDownload {

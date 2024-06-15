@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.joshgm3z.downloader.data.FileType
+import com.joshgm3z.downloader.model.room.data.FileType
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 
 @Preview(showBackground = true)
