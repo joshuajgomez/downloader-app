@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.model.DownloadRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -28,10 +27,5 @@ class DownloadViewModel @Inject constructor(
         }
     }
 
-    fun onAddDownloadClicked(url: String) {
-        viewModelScope.launch {
-            downloadRepository.addDownload(url)
-        }
-    }
 }
 

@@ -67,7 +67,7 @@ private fun MainUi(downloads: List<DownloadTask> = DownloadTask.samples) {
         }
         if (showBottomSheet) {
             ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
-                NewDownload {
+                NewDownload{
                     showBottomSheet = false
                 }
             }
