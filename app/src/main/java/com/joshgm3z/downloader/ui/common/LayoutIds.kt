@@ -10,4 +10,6 @@ enum class LayoutId {
     size,
     button,
     cardTitle,
+    textInput,
+    recentList,
 }
