@@ -31,6 +31,7 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     text: String = "Heyy",
     hint: String = "Type a url",
+    maxLines: Int = 3,
     onTextChanged: (text: String) -> Unit = {},
 ) {
     BasicTextField(
@@ -49,5 +50,6 @@ fun CustomTextField(
         textStyle = LocalTextStyle.current.copy(
             fontSize = 20.sp,
         ),
+        maxLines = maxLines
     )
 }

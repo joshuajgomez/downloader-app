@@ -1,6 +1,7 @@
 package com.joshgm3z.downloader.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,10 +21,13 @@ fun PreviewDownloadTaskList() {
 }
 
 @Composable
-fun DownloadTaskList(downloads: List<DownloadTask> = DownloadTask.samples) {
+fun DownloadTaskList(
+    paddingValues: PaddingValues = PaddingValues(horizontal = 10.dp),
+    downloads: List<DownloadTask> = DownloadTask.samples
+) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(horizontal = 10.dp)
+        contentPadding = paddingValues
     ) {
         items(downloads) {
             DownloadTaskItem(it)
