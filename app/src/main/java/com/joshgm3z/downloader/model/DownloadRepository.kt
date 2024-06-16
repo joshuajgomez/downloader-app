@@ -1,10 +1,14 @@
 package com.joshgm3z.downloader.model
 
+import android.os.Handler
+import android.os.Looper
 import com.joshgm3z.downloader.model.room.dao.DownloadTaskDao
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class DownloadRepository @Inject constructor(
     private val downloadTaskDao: DownloadTaskDao
 ) {
@@ -13,7 +17,7 @@ class DownloadRepository @Inject constructor(
         onAdded()
     }
 
-    suspend fun getAllDownloads(): Flow<List<DownloadTask>> {
+    fun getAllDownloads(): Flow<List<DownloadTask>> {
         return downloadTaskDao.getAll()
     }
 
@@ -22,11 +26,13 @@ class DownloadRepository @Inject constructor(
         onFileFound: (downloadTask: DownloadTask) -> Unit,
         onError: (message: String) -> Unit
     ) {
-        if (url.isNotEmpty()) {
-            onFileFound(DownloadTask.new(url))
-        } else {
-            onError("Invalid url")
-        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (url.isNotEmpty()) {
+                onFileFound(DownloadTask.new(url))
+            } else {
+                onError("Invalid url")
+            }
+        }, 1000)
     }
 
 }

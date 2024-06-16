@@ -41,16 +41,13 @@ private fun PreviewMainUi() {
 }
 
 @Composable
-fun MainUiContainer(downloadViewModel: DownloadViewModel = hiltViewModel<DownloadViewModel>()) {
-    Surface {
-        val downloadTasks = downloadViewModel.downloadTasks.collectAsState()
-        MainUi(downloadTasks.value)
-    }
+fun MainUiContainer() {
+    MainUi()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainUi(downloads: List<DownloadTask> = DownloadTask.samples) {
+private fun MainUi() {
     var showBottomSheet by remember { mutableStateOf(false) }
     Scaffold(
         topBar = { TitleBar() },
@@ -60,14 +57,10 @@ private fun MainUi(downloads: List<DownloadTask> = DownloadTask.samples) {
             }
         },
     ) {
-        if (downloads.isEmpty()) {
-            EmptyScreen()
-        } else {
-            DownloadTaskList(it, downloads)
-        }
+        DownloadTaskList(paddingValues = it)
         if (showBottomSheet) {
             ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
-                NewDownload{
+                NewDownload {
                     showBottomSheet = false
                 }
             }

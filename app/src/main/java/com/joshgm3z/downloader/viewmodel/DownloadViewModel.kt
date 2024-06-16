@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.model.DownloadRepository
+import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,13 +18,14 @@ class DownloadViewModel @Inject constructor(
     private val downloadRepository: DownloadRepository
 ) : ViewModel() {
 
-    private val _downloadTasks: MutableStateFlow<List<DownloadTask>> = MutableStateFlow(emptyList())
-    val downloadTasks: StateFlow<List<DownloadTask>> = _downloadTasks
+    private val _downloadTasks = MutableStateFlow(emptyList<DownloadTask>())
+    val downloadTasks = _downloadTasks.asStateFlow()
 
     init {
         viewModelScope.launch {
             downloadRepository.getAllDownloads().collectLatest {
-                _downloadTasks.value = it
+                Logger.entry()
+                _downloadTasks.emit(it)
             }
         }
     }

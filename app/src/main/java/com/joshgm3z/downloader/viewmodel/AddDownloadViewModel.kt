@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joshgm3z.downloader.model.DownloadRepository
 import com.joshgm3z.downloader.model.room.data.DownloadTask
+import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +29,7 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
         MutableStateFlow(AddUiState.Init())
     val uiState: StateFlow<AddUiState> = _uiState
 
-    var downloadTask: DownloadTask? = null
+    private var downloadTask: DownloadTask? = null
 
     @Inject
     lateinit var downloadRepository: DownloadRepository
@@ -42,7 +43,7 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
                         _uiState.value = AddUiState.Close()
                     }, 1000)
                 }
-            }
+            } ?: Logger.warn("downloadTask is null")
         }
     }
 

@@ -65,7 +65,7 @@ fun PreviewNewDownload() {
 @Composable
 fun NewDownload(
     addDownloadViewModel: AddDownloadViewModel = hiltViewModel(),
-    closeSheet: () -> Unit={}
+    closeSheet: () -> Unit = {}
 ) {
     ConstraintLayout(
         newDownloadConstraints(),
@@ -108,7 +108,6 @@ fun NewDownload(
                 },
                 modifier = Modifier
                     .padding(10.dp),
-                enabled = addDownloadViewModel.downloadTask != null
             ) {
                 Text(text = "Start Download")
             }
