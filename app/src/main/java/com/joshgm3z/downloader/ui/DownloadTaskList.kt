@@ -17,19 +17,26 @@ import com.joshgm3z.downloader.viewmodel.DownloadViewModel
 
 @Preview
 @Composable
-fun PreviewDownloadTaskList() {
+fun PreviewDownloadTaskListContainer(paddingValues: PaddingValues = PaddingValues(10.dp)) {
     DownloaderTheme {
         DownloadTaskList()
     }
 }
 
 @Composable
-fun DownloadTaskList(
+fun DownloadTaskListContainer(
     downloadViewModel: DownloadViewModel = hiltViewModel(),
     paddingValues: PaddingValues = PaddingValues(horizontal = 10.dp),
 ) {
     val listState = downloadViewModel.downloadTasks.collectAsState()
-    val downloadTasks = listState.value
+    DownloadTaskList(listState.value, paddingValues)
+}
+
+@Composable
+fun DownloadTaskList(
+    downloadTasks: List<DownloadTask> = DownloadTask.samples,
+    paddingValues: PaddingValues = PaddingValues(horizontal = 10.dp),
+) {
     if (downloadTasks.isEmpty()) {
         EmptyScreen()
     } else {

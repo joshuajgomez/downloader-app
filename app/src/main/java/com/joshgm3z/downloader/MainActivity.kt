@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.joshgm3z.downloader.ui.MainUiContainer
+import com.joshgm3z.downloader.ui.MainUi
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DownloaderTheme {
-                MainUiContainer()
+                MainUi()
             }
         }
     }

@@ -11,17 +11,11 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,31 +23,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.utils.Logger
-import com.joshgm3z.downloader.viewmodel.DownloadViewModel
-import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun PreviewMainUi() {
     DownloaderTheme {
-        Surface {
-            MainUi()
+        Scaffold(
+            topBar = { TitleBar() },
+            floatingActionButton = {
+                AddDownloadButton()
+            },
+        ) {
+            DownloadTaskList(paddingValues = it)
+            /*ModalBottomSheet(onDismissRequest = { }) {
+                NewDownload()
+            }*/
         }
     }
 }
 
-@Composable
-fun MainUiContainer() {
-    MainUi()
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainUi() {
+fun MainUi() {
     var showBottomSheet by remember { mutableStateOf(false) }
     Scaffold(
         topBar = { TitleBar() },
@@ -64,13 +58,16 @@ private fun MainUi() {
             }
         },
     ) {
-        DownloadTaskList(paddingValues = it)
+        DownloadTaskListContainer(paddingValues = it)
         if (showBottomSheet) {
-            ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
-                NewDownload {
-                    showBottomSheet = false
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                content = {
+                    NewDownload {
+                        showBottomSheet = false
+                    }
                 }
-            }
+            )
         }
     }
 }
@@ -93,7 +90,7 @@ fun TitleBar() {
 }
 
 @Composable
-fun AddDownloadButton(onAddClick: () -> Unit) {
+fun AddDownloadButton(onAddClick: () -> Unit = {}) {
     ExtendedFloatingActionButton(
         text = { Text("New Download") },
         icon = { Icon(Icons.Filled.Add, contentDescription = null) },
