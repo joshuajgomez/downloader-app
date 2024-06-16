@@ -1,5 +1,7 @@
 package com.joshgm3z.downloader.ui
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -67,6 +69,7 @@ fun NewDownload(
     addDownloadViewModel: AddDownloadViewModel = hiltViewModel(),
     closeSheet: () -> Unit = {}
 ) {
+    addDownloadViewModel.resetUiState()
     ConstraintLayout(
         newDownloadConstraints(),
         Modifier.padding(horizontal = 10.dp)
@@ -149,10 +152,9 @@ fun Content(
 
             is AddUiState.Added -> {
                 Added()
-            }
-
-            is AddUiState.Close -> {
-                closeSheet()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    closeSheet()
+                }, 1000)
             }
 
             is AddUiState.Error -> {

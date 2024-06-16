@@ -35,7 +35,8 @@ fun DownloadTaskList(
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = paddingValues
+            contentPadding = paddingValues,
+            modifier = Modifier.padding(horizontal = 10.dp)
         ) {
             items(downloadTasks) {
                 DownloadTaskItem(it)

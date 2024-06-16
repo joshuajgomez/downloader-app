@@ -19,7 +19,6 @@ sealed class AddUiState {
     data class Metadata(val downloadTask: DownloadTask) : AddUiState()
     data class Added(val message: String = "Download added") : AddUiState()
     data class Error(val message: String = "Invalid URL") : AddUiState()
-    data class Close(val message: String = "") : AddUiState()
 }
 
 @HiltViewModel
@@ -39,9 +38,6 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
             downloadTask?.let {
                 downloadRepository.addDownload(it) {
                     _uiState.value = AddUiState.Added()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        _uiState.value = AddUiState.Close()
-                    }, 1000)
                 }
             } ?: Logger.warn("downloadTask is null")
         }
@@ -62,5 +58,9 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
                 onError = { _uiState.value = AddUiState.Error(it) }
             )
         }
+    }
+
+    fun resetUiState() {
+        _uiState.value = AddUiState.Init()
     }
 }

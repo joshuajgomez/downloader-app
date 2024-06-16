@@ -71,10 +71,9 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 text = downloadTask.filename,
                 modifier = Modifier
                     .layoutId(LayoutId.fileName)
-                    .fillMaxWidth(0.8f),
+                    .fillMaxWidth(0.7f),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
-                fontSize = 20.sp,
                 overflow = TextOverflow.Ellipsis
             )
 

@@ -18,7 +18,7 @@ class DownloadViewModel @Inject constructor(
     private val downloadRepository: DownloadRepository
 ) : ViewModel() {
 
-    private val _downloadTasks = MutableStateFlow(emptyList<DownloadTask>())
+    private val _downloadTasks = MutableStateFlow(DownloadTask.samples)
     val downloadTasks = _downloadTasks.asStateFlow()
 
     init {
