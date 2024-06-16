@@ -1,7 +1,5 @@
 package com.joshgm3z.downloader.model
 
-import android.os.Handler
-import android.os.Looper
 import com.joshgm3z.downloader.model.room.dao.DownloadTaskDao
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DownloadRepository @Inject constructor(
-    private val downloadTaskDao: DownloadTaskDao
+    private val downloadTaskDao: DownloadTaskDao,
 ) {
     suspend fun addDownload(downloadTask: DownloadTask, onAdded: () -> Unit) {
         downloadTaskDao.add(downloadTask)
@@ -27,6 +25,10 @@ class DownloadRepository @Inject constructor(
 
     suspend fun deleteAll() {
         downloadTaskDao.deleteAll()
+    }
+
+    suspend fun updateTaskState(downloadTask: DownloadTask) {
+        downloadTaskDao.update(downloadTask)
     }
 
 }

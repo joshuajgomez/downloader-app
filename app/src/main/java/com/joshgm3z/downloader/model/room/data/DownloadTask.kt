@@ -56,6 +56,18 @@ data class DownloadTask(
                 return samples
             }
     }
+
+    override fun toString(): String {
+        return "DownloadTask(id=$id, " +
+                "url='$url', " +
+                "filename='$filename', " +
+                "totalSize=$totalSize, " +
+                "currentSize=$currentSize, " +
+                "progress=$progress, " +
+                "state=$state, " +
+                "fileType=$fileType)"
+    }
+
 }
 
 private fun String.fileType(): FileType =

@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.joshgm3z.downloader.model.DownloadManager
 import com.joshgm3z.downloader.model.DownloadRepository
 import com.joshgm3z.downloader.model.OnlineRepository
 import com.joshgm3z.downloader.model.room.data.DownloadTask
@@ -37,10 +38,15 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var onlineRepository: OnlineRepository
 
+    @Inject
+    lateinit var downloadManager: DownloadManager
+
+
     fun onDownloadClick() {
         viewModelScope.launch {
             downloadTask?.let {
                 downloadRepository.addDownload(it) {
+                    downloadManager.addToQueue(it)
                     _uiState.value = AddUiState.Added()
                 }
             } ?: Logger.warn("downloadTask is null")
