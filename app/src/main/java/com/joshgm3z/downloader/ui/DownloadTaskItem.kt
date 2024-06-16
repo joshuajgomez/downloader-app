@@ -48,7 +48,7 @@ private fun PreviewDownloadTaskItem() {
                 Text(text = it.name, color = Color.White)
                 DownloadTaskItem(
                     DownloadTask.sample.copy(
-                        state = it
+                        state = it,
                     )
                 )
             }
@@ -85,7 +85,9 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                 modifier = Modifier.layoutId(LayoutId.progress)
             ) {
                 LinearProgressIndicator(
-                    progress = { downloadTask.progress.toFloat() },
+                    progress = { downloadTask.progress.toFloat() / 100 },
+                    trackColor = colorScheme.primaryContainer,
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 )
             }
 

@@ -24,6 +24,7 @@ class DownloadsListViewModel @Inject constructor(
     val downloadTasks = _downloadTasks.asStateFlow()
 
     init {
+        Logger.entry()
         viewModelScope.launch {
             listenListUpdates()
         }

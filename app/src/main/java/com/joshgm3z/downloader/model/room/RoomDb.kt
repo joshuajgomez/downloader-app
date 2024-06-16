@@ -22,12 +22,14 @@ abstract class RoomDb : RoomDatabase() {
 @InstallIn(SingletonComponent::class)
 class RoomProvider {
     @Provides
+    @Singleton
     fun provideDb(@ApplicationContext context: Context): RoomDb = Room.databaseBuilder(
         context,
         RoomDb::class.java, "download-db"
     ).build()
 
     @Provides
+    @Singleton
     fun provideDownloadTaskDao(roomDb: RoomDb) = roomDb.downloadTaskDao()
 }
 

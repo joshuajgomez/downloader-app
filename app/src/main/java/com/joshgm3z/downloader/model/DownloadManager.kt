@@ -19,12 +19,16 @@ class DownloadManager @Inject constructor(
 ) {
 
     init {
+        Logger.entry()
         scope.launch {
             downloadTaskDao.getAll().collectLatest { downloadTasks ->
+                Logger.debug("downloadTasks = [${downloadTasks}]")
                 checkNewDownloads(downloadTasks)
             }
         }
     }
+
+    private var runningTask: DownloadTask? = null
 
     private val pendingTasksList = hashMapOf<Int, DownloadTask>()
 
@@ -50,18 +54,22 @@ class DownloadManager @Inject constructor(
 
     private fun checkQueue() {
         Logger.entry()
+        if (runningTask != null) {
+            Logger.debug("Task already running: $runningTask")
+            return
+        }
         pendingTasksList.values.forEach { downloadTask ->
-            updateTaskState(downloadTask)
+            updateTaskState(DownloadState.RUNNING, downloadTask)
             download(downloadTask)
         }
     }
 
-    private fun updateTaskState(downloadTask: DownloadTask) {
-        Logger.debug("downloadTask = [${downloadTask}]")
+    private fun updateTaskState(state: DownloadState, downloadTask: DownloadTask) {
+        Logger.debug("state = [${state}], downloadTask = [${downloadTask}]")
         scope.launch {
             downloadTaskDao.update(
                 downloadTask.copy(
-                    state = DownloadState.RUNNING
+                    state = state
                 )
             )
         }
@@ -70,29 +78,33 @@ class DownloadManager @Inject constructor(
     private fun download(downloadTask: DownloadTask) {
         Logger.debug("downloadTask = [${downloadTask}]")
         scope.launch {
-            downloadTaskFlow.emit(
-                downloadTask.copy(
-                    state = DownloadState.RUNNING,
-                    progress = 0.0
-                )
-            )
+            // set runningTask to avoid parallel downloads
+            runningTask = downloadTask
+            notifyDownloadState(DownloadState.RUNNING, 0.0)
             repeat(10) {
                 sleep(1000)
-                downloadTaskFlow.emit(
-                    downloadTask.copy(
-                        state = DownloadState.RUNNING,
-                        progress = it * 10.0
-                    )
+                notifyDownloadState(
+                    state = DownloadState.RUNNING,
+                    progress = (it + 1) * 10.0
                 )
             }
+            notifyDownloadState(DownloadState.COMPLETED, 100.0)
+            // prepare queue for next download
+            pendingTasksList.remove(downloadTask.id)
+            runningTask = null
+            updateTaskState(DownloadState.COMPLETED, downloadTask)
+            checkQueue()
+        }
+    }
+
+    private fun notifyDownloadState(state: DownloadState, progress: Double) {
+        scope.launch {
             downloadTaskFlow.emit(
-                downloadTask.copy(
-                    state = DownloadState.COMPLETED,
-                    progress = 100.0,
+                runningTask?.copy(
+                    state = state,
+                    progress = progress
                 )
             )
-            pendingTasksList.remove(downloadTask.id)
-            checkQueue()
         }
     }
 
