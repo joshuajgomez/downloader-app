@@ -21,18 +21,12 @@ class DownloadRepository @Inject constructor(
         return downloadTaskDao.getAll()
     }
 
-    fun checkUrl(
-        url: String,
-        onFileFound: (downloadTask: DownloadTask) -> Unit,
-        onError: (message: String) -> Unit
-    ) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (url.isNotEmpty()) {
-                onFileFound(DownloadTask.new(url))
-            } else {
-                onError("Invalid url")
-            }
-        }, 1000)
+    suspend fun deleteDownload(downloadTask: DownloadTask) {
+        TODO("Not yet implemented")
+    }
+
+    suspend fun deleteAll() {
+        downloadTaskDao.deleteAll()
     }
 
 }

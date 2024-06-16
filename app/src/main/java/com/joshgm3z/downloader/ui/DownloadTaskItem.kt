@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -95,12 +96,6 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                     .fillMaxWidth(0.8f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
-            )
-
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = null,
-                modifier = Modifier.layoutId(LayoutId.close)
             )
 
             StateIndicator(

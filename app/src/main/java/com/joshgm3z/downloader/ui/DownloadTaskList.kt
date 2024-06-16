@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
-import com.joshgm3z.downloader.viewmodel.DownloadViewModel
+import com.joshgm3z.downloader.viewmodel.DownloadsListViewModel
 
 @Preview
 @Composable
@@ -25,7 +25,7 @@ fun PreviewDownloadTaskListContainer(paddingValues: PaddingValues = PaddingValue
 
 @Composable
 fun DownloadTaskListContainer(
-    downloadViewModel: DownloadViewModel = hiltViewModel(),
+    downloadViewModel: DownloadsListViewModel = hiltViewModel(),
     paddingValues: PaddingValues = PaddingValues(horizontal = 10.dp),
 ) {
     val listState = downloadViewModel.downloadTasks.collectAsState()

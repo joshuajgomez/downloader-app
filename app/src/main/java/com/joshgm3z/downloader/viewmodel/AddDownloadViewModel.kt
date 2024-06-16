@@ -5,6 +5,7 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joshgm3z.downloader.model.DownloadRepository
+import com.joshgm3z.downloader.model.OnlineRepository
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,9 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var downloadRepository: DownloadRepository
 
+    @Inject
+    lateinit var onlineRepository: OnlineRepository
+
     fun onDownloadClick() {
         viewModelScope.launch {
             downloadTask?.let {
@@ -50,7 +54,7 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
         }
         _uiState.value = AddUiState.Fetching()
         viewModelScope.launch {
-            downloadRepository.checkUrl(url,
+            onlineRepository.checkUrl(url,
                 onFileFound = {
                     downloadTask = it
                     _uiState.value = AddUiState.Metadata(it)

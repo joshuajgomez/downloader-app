@@ -8,9 +8,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DownloadTaskDao {
+
     @Query("SELECT * FROM DownloadTask")
     fun getAll(): Flow<List<DownloadTask>>
 
     @Insert
     suspend fun add(downloadTask: DownloadTask)
+
+    @Query("DELETE FROM DownloadTask")
+    suspend fun deleteAll()
 }
