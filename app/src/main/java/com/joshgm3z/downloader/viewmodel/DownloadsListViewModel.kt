@@ -48,16 +48,17 @@ class DownloadsListViewModel @Inject constructor(
             _downloadTasks.update { downloadTasks ->
                 var count = 0
                 for (downloadTask in downloadTasks) {
-                    count++
                     if (downloadTask.id == update.id) {
                         break
                     }
+                    count++
                 }
+                if (count == downloadTasks.size)
+                    return@collectLatest
+
                 downloadTasks.toMutableList().apply {
-                    if (count < size) {
-                        removeAt(count)
-                        add(count, update)
-                    }
+                    set(count, update)
+                    Logger.info("updated: $this")
                 }
             }
         }
