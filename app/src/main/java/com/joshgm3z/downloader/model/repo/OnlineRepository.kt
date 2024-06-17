@@ -1,4 +1,4 @@
-package com.joshgm3z.downloader.model;
+package com.joshgm3z.downloader.model.repo;
 
 import android.os.Handler
 import android.os.Looper

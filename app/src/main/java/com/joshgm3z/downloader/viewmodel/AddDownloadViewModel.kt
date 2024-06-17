@@ -2,8 +2,8 @@ package com.joshgm3z.downloader.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.joshgm3z.downloader.model.DownloadRepository
-import com.joshgm3z.downloader.model.OnlineRepository
+import com.joshgm3z.downloader.model.repo.DownloadRepository
+import com.joshgm3z.downloader.model.repo.OnlineRepository
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,9 +38,8 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
     fun onDownloadClick() {
         viewModelScope.launch {
             downloadTask?.let {
-                downloadRepository.addDownload(it) {
-                    _uiState.value = AddUiState.Added()
-                }
+                downloadRepository.addDownload(it)
+                _uiState.value = AddUiState.Added()
             } ?: Logger.warn("downloadTask is null")
         }
     }

@@ -3,7 +3,7 @@ package com.joshgm3z.downloader.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joshgm3z.downloader.model.DownloadEvents
-import com.joshgm3z.downloader.model.DownloadRepository
+import com.joshgm3z.downloader.model.repo.DownloadRepository
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
