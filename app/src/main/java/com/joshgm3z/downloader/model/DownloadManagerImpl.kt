@@ -4,19 +4,34 @@ import com.joshgm3z.downloader.model.room.dao.DownloadTaskDao
 import com.joshgm3z.downloader.model.room.data.DownloadState
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DownloadManagerProvider {
+    @Binds
+    abstract fun provideDownloadManager(
+        downloadManagerImpl: DownloadManagerImpl
+    ): DownloadEvents
+}
+
 @Singleton
-class DownloadManager @Inject constructor(
+class DownloadManagerImpl @Inject constructor(
     private val scope: CoroutineScope,
     private val downloadTaskDao: DownloadTaskDao,
-) {
+) : DownloadEvents {
 
     init {
         Logger.entry()
@@ -32,7 +47,7 @@ class DownloadManager @Inject constructor(
 
     private val pendingTasksList = hashMapOf<Int, DownloadTask>()
 
-    val downloadTaskFlow: MutableStateFlow<DownloadTask?> = MutableStateFlow(null)
+    private val downloadTaskFlow: MutableStateFlow<DownloadTask?> = MutableStateFlow(null)
 
     private fun checkNewDownloads(downloadTasks: List<DownloadTask>) {
         Logger.debug("downloadTasks = [${downloadTasks}]")
@@ -108,4 +123,7 @@ class DownloadManager @Inject constructor(
         }
     }
 
+    override fun taskUpdates(): StateFlow<DownloadTask?> = downloadTaskFlow.asStateFlow()
+
 }
+

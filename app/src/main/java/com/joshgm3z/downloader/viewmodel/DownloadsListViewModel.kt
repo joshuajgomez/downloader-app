@@ -2,9 +2,9 @@ package com.joshgm3z.downloader.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.joshgm3z.downloader.model.DownloadManager
-import com.joshgm3z.downloader.model.room.data.DownloadTask
+import com.joshgm3z.downloader.model.DownloadEvents
 import com.joshgm3z.downloader.model.DownloadRepository
+import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DownloadsListViewModel @Inject constructor(
     private val downloadRepository: DownloadRepository,
-    private val downloadManager: DownloadManager,
+    private val downloadEvents: DownloadEvents,
 ) : ViewModel() {
 
     private val _downloadTasks = MutableStateFlow(DownloadTask.samples)
@@ -43,7 +43,7 @@ class DownloadsListViewModel @Inject constructor(
 
     private suspend fun listenStateUpdates() {
         Logger.entry()
-        downloadManager.downloadTaskFlow.collectLatest { update ->
+        downloadEvents.taskUpdates().collectLatest { update ->
             Logger.debug("update = [${update}]")
             if (update == null) return@collectLatest
             _downloadTasks.update { downloadTasks ->
