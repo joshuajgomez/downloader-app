@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -30,7 +31,8 @@ fun DeleteIcon(
         onClick = { onClick() }) {
         Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = null
+            contentDescription = null,
+            tint = colorScheme.onPrimary
         )
     }
 }

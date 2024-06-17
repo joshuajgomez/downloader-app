@@ -12,24 +12,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.joshgm3z.downloader.model.room.data.DownloadTask
+import com.joshgm3z.downloader.ui.common.isPreview
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.viewmodel.DownloadsListViewModel
 
 @Preview
 @Composable
-fun PreviewDownloadTaskListContainer(paddingValues: PaddingValues = PaddingValues(10.dp)) {
+fun PreviewDownloadTaskListContainer() {
     DownloaderTheme {
-        DownloadTaskList()
+        DownloadTaskListContainer()
     }
 }
 
 @Composable
 fun DownloadTaskListContainer(
-    downloadViewModel: DownloadsListViewModel = hiltViewModel(),
     paddingValues: PaddingValues = PaddingValues(horizontal = 10.dp),
 ) {
-    val listState = downloadViewModel.downloadTasks.collectAsState()
-    DownloadTaskList(listState.value, paddingValues)
+    val downloadTasks =
+        if (isPreview())
+            DownloadTask.samples
+        else {
+            val downloadViewModel: DownloadsListViewModel = hiltViewModel()
+            val listState = downloadViewModel.downloadTasks.collectAsState()
+            listState.value
+        }
+    DownloadTaskList(downloadTasks, paddingValues)
 }
 
 @Composable
@@ -43,7 +50,11 @@ fun DownloadTaskList(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = paddingValues,
-            modifier = Modifier.padding(horizontal = 10.dp)
+            modifier = Modifier.padding(
+                start = 10.dp,
+                end = 10.dp,
+                top = 10.dp
+            )
         ) {
             items(downloadTasks) {
                 DownloadTaskItem(it)
