@@ -12,11 +12,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -28,12 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.joshgm3z.downloader.model.room.data.DownloadState
 import com.joshgm3z.downloader.model.room.data.DownloadTask
-import com.joshgm3z.downloader.ui.common.CustomCard
 import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
@@ -58,7 +56,11 @@ private fun PreviewDownloadTaskItem() {
 
 @Composable
 fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
-    CustomCard {
+    Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        )
+    ) {
         ConstraintLayout(
             downloadTaskConstraints(),
             modifier = Modifier
@@ -199,7 +201,7 @@ private fun downloadTaskConstraints(): ConstraintSet {
         }
 
         constrain(progress) {
-            top.linkTo(url.bottom, 10.dp)
+            top.linkTo(url.bottom, 5.dp)
             start.linkTo(fileName.start)
         }
 

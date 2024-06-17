@@ -2,7 +2,9 @@ package com.joshgm3z.downloader.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,18 +27,21 @@ import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.ui.theme.jumperFamily
 import com.joshgm3z.downloader.viewmodel.DeleteDownloadViewModel
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun PreviewTitleBar() {
     DownloaderTheme {
-        TitleBar()
+        Column {
+            TitleBar()
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 
 @Composable
 fun TitleBar(deleteDownloadViewModel: DeleteDownloadViewModel = hiltViewModel()) {
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         shape = RoundedCornerShape(
             topStart = 0.dp,
             topEnd = 0.dp,
@@ -47,9 +52,8 @@ fun TitleBar(deleteDownloadViewModel: DeleteDownloadViewModel = hiltViewModel())
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp)
                 .background(color = colorScheme.primary)
-                .padding(horizontal = 20.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
