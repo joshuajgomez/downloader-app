@@ -3,6 +3,9 @@ package com.joshgm3z.downloader.model
 import com.joshgm3z.downloader.model.room.data.DownloadState
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import com.joshgm3z.downloader.utils.Logger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.lang.Thread.sleep
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,8 +20,8 @@ class DownloadWorker @Inject constructor() {
         // set runningTask to avoid parallel downloads
         onStateUpdate(DownloadState.RUNNING, 0.0)
         repeat(10) {
-            Thread.sleep(1000)
-            onStateUpdate(DownloadState.RUNNING, it * 10.0)
+            onStateUpdate(DownloadState.RUNNING, (it + 1) * 10.0)
+            sleep(1000)
 
         }
         onStateUpdate(DownloadState.COMPLETED, 100.0)
