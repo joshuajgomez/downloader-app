@@ -36,6 +36,7 @@ import com.joshgm3z.downloader.ui.common.FileIcon
 import com.joshgm3z.downloader.ui.common.LayoutId
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.ui.theme.Green40
+import com.joshgm3z.downloader.utils.sizeText
 
 @Preview
 @Composable
@@ -115,12 +116,12 @@ fun DownloadTaskItem(downloadTask: DownloadTask = DownloadTask.sample) {
                             state == DownloadState.PAUSED
                 ) {
                     Text(
-                        text = "${downloadTask.currentSize.toInt()}MB of ",
+                        text = "${downloadTask.currentSize.sizeText()} of ",
                         fontWeight = FontWeight.Bold,
                     )
                 }
                 Text(
-                    text = "${downloadTask.totalSize.toInt()}MB",
+                    text = downloadTask.totalSize.sizeText(),
                     fontWeight = FontWeight.Bold,
                 )
             }

@@ -11,35 +11,32 @@ data class DownloadTask(
     val id: Int,
     val url: String,
     val filename: String,
-    val totalSize: Double,
-    val currentSize: Double,
-    val progress: Double,
+    val totalSize: Long,
+    val currentSize: Long,
+    val progress: Long,
     val state: DownloadState,
     val fileType: FileType,
+    val mime: String,
 ) {
     companion object {
         fun new(url: String): DownloadTask = DownloadTask(
             id = 0,
             url = url,
             filename = url.fileName(),
-            totalSize = 0.0,
-            currentSize = 0.0,
-            progress = 0.0,
+            totalSize = 0,
+            currentSize = 0,
+            progress = 0,
             state = DownloadState.PENDING,
-            fileType = FileType.UNKNOWN
+            fileType = url.fileType(),
+            mime = "unknown"
         )
 
         val sample: DownloadTask
             get() {
                 val url = sampleUrls.random()
-                val filename = url.fileName()
                 val totalSize = sampleFileSizes.random()
-                val currentSize = totalSize - Random.nextDouble(totalSize)
-                return DownloadTask(
-                    id = 1,
-                    url = url,
-                    filename = url.fileName(),
-                    fileType = filename.fileType(),
+                val currentSize = totalSize - Random.nextLong(totalSize)
+                return new(url).copy(
                     totalSize = totalSize,
                     currentSize = currentSize,
                     progress = (currentSize / totalSize) * 100,
@@ -65,7 +62,9 @@ data class DownloadTask(
                 "currentSize=$currentSize, " +
                 "progress=$progress, " +
                 "state=$state, " +
-                "fileType=$fileType)"
+                "fileType=$fileType," +
+                "mime=$mime," +
+                ")"
     }
 
 }
@@ -93,12 +92,12 @@ private val sampleUrls: List<String> = listOf(
     "https://www.example.com/that report.txt",
 )
 
-private val sampleFileSizes: List<Double> = listOf(
-    100.0,
-    200.0,
-    300.0,
-    400.0,
-    500.0,
+private val sampleFileSizes: List<Long> = listOf(
+    100,
+    200,
+    300,
+    400,
+    500,
 )
 
 enum class DownloadState {

@@ -3,7 +3,7 @@ package com.joshgm3z.downloader.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.joshgm3z.downloader.model.DownloadManager
+import com.joshgm3z.downloader.model.DownloadPlanner
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class DownloadService : Service() {
 
     @Inject
-    lateinit var downloadManager: DownloadManager
+    lateinit var downloadPlanner: DownloadPlanner
 
     override fun onCreate() {
         super.onCreate()

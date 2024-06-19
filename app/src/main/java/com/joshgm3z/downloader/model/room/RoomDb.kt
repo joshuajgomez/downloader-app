@@ -13,7 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Database(entities = [DownloadTask::class], version = 1, exportSchema = false)
+@Database(entities = [DownloadTask::class], version = 3, exportSchema = false)
 abstract class RoomDb : RoomDatabase() {
     abstract fun downloadTaskDao(): DownloadTaskDao
 }
@@ -23,10 +23,13 @@ abstract class RoomDb : RoomDatabase() {
 class RoomProvider {
     @Provides
     @Singleton
-    fun provideDb(@ApplicationContext context: Context): RoomDb = Room.databaseBuilder(
-        context,
-        RoomDb::class.java, "download-db"
-    ).build()
+    fun provideDb(@ApplicationContext context: Context): RoomDb = Room
+        .databaseBuilder(
+            context,
+            RoomDb::class.java, "download-db"
+        )
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Provides
     @Singleton

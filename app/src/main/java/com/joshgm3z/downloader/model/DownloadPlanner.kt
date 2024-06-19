@@ -10,9 +10,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,23 +18,21 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DownloadManagerProvider{
+abstract class DownloadPlannerProvider {
     @Binds
-    abstract fun provideDownloadEvents(downloadManager: DownloadManager): DownloadEvents
+    abstract fun provideDownloadEvents(downloadPlanner: DownloadPlanner): DownloadEvents
 }
 
 @Singleton
-class DownloadManager @Inject constructor(
-    private val scope: CoroutineScope,
+class DownloadPlanner @Inject constructor(
+    scope: CoroutineScope,
     private val downloadWorker: DownloadWorker,
     private val downloadTaskDao: DownloadTaskDao,
 ) : DownloadEvents {
 
-    private val downloadTaskFlow = MutableStateFlow<DownloadTask?>(null)
-
     private var runningTask: DownloadTask? = null
 
-    private val downloadTasksQueue = mutableStateMapOf<Int, DownloadTask>()
+    private val downloadTasksQueue = HashMap<Int, DownloadTask>()
 
     init {
         Logger.entry()
@@ -44,6 +40,22 @@ class DownloadManager @Inject constructor(
             downloadTaskDao.getAll().collectLatest {
                 Logger.debug("downloadTasks = [${it}]")
                 checkNewDownloads(it)
+            }
+        }
+        scope.launch {
+            downloadWorker.downloadTaskFlow.collectLatest {
+                if (it == null) {
+                    Logger.warn("DownloadTask is null")
+                    return@collectLatest
+                }
+
+                if (it.state == DownloadState.COMPLETED) {
+                    // prepare queue for next download
+                    downloadTasksQueue.remove(it.id)
+                    runningTask = null
+                    doNextTask()
+                    downloadTaskDao.update(it)
+                }
             }
         }
     }
@@ -85,31 +97,9 @@ class DownloadManager @Inject constructor(
         }
         val downloadTask = downloadTasksQueue.values.first()
         runningTask = downloadTask
-        scope.launch {
-            downloadWorker.download(downloadTask) { state, progress ->
-                notifyState(downloadTask.copy(state = state, progress = progress))
-
-                if (state == DownloadState.COMPLETED) {
-                    // prepare queue for next download
-                    downloadTasksQueue.remove(downloadTask.id)
-                    runningTask = null
-                    doNextTask()
-                }
-            }
-        }
+        downloadWorker.download(downloadTask)
     }
 
-    private fun notifyState(downloadTask: DownloadTask) {
-        scope.launch {
-            downloadTaskFlow.emit(
-                downloadTask
-            )
-            if (downloadTask.state == DownloadState.COMPLETED) {
-                downloadTaskDao.update(downloadTask)
-            }
-        }
-    }
-
-    override fun taskUpdates(): StateFlow<DownloadTask?> = downloadTaskFlow.asStateFlow()
+    override fun taskUpdates(): StateFlow<DownloadTask?> = downloadWorker.downloadTaskFlow
 }
 
