@@ -26,6 +26,7 @@ class OnlineRepository @Inject constructor(
                     val new = DownloadTask.new(url)
                     new.totalSize = it
                     new.mime = fileManager.getMimeType(url)
+                    new.timeAdded = System.currentTimeMillis()
 
                     onFileFound(new)
                 }

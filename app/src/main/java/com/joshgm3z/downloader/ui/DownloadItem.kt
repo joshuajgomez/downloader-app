@@ -124,7 +124,7 @@ fun BriefMetadata(
 
 @Composable
 fun Info(text: String) {
-    Text(text = text, color = colorScheme.onSurface)
+    Text(text = text, color = colorScheme.onSurface.copy(alpha = 0.6f))
 }
 
 @Composable
@@ -133,7 +133,7 @@ fun FailedIcon() {
         imageVector = Icons.Default.Error,
         contentDescription = null,
         tint = colorScheme.error,
-        modifier = Modifier.size(20.dp)
+        modifier = Modifier.size(18.dp)
     )
 }
 
@@ -172,7 +172,7 @@ fun simpleDownloadItemConstraints() = ConstraintSet {
         bottom.linkTo(parent.bottom)
     }
     constrain(filename) {
-        start.linkTo(icon.end, 10.dp)
+        start.linkTo(icon.end, 15.dp)
         top.linkTo(icon.top)
     }
     constrain(metadata) {

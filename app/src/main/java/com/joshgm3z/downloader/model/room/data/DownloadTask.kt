@@ -18,7 +18,7 @@ data class DownloadTask(
     val fileType: FileType,
     var mime: String,
     val localPath: String,
-    val timeAdded: Long,
+    var timeAdded: Long,
     val timeStarted: Long,
     val timeCompleted: Long,
     ) {
@@ -62,21 +62,6 @@ data class DownloadTask(
                 return samples
             }
     }
-
-    override fun toString(): String {
-        return "DownloadTask(id=$id, " +
-                "url='$url', " +
-                "filename='$filename', " +
-                "totalSize=$totalSize, " +
-                "currentSize=$currentSize, " +
-                "progress=$progress, " +
-                "state=$state, " +
-                "fileType=$fileType, " +
-                "mime=$mime, " +
-                "localPath=${localPath}, " +
-                ")"
-    }
-
 }
 
 private fun String.fileType(): FileType =

@@ -28,5 +28,8 @@ fun Long.relativeTime(): String {
         .printZeroNever()
         .toFormatter()
     val elapsed = formatter.print(period)
+    if (elapsed.isEmpty()) {
+        return "Just now"
+    }
     return elapsed.substringBefore("\n")
 }
