@@ -53,6 +53,7 @@ import com.joshgm3z.downloader.ui.common.CustomTextField
 import com.joshgm3z.downloader.ui.common.LayoutId
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.ui.theme.Green40
+import com.joshgm3z.downloader.utils.sizeText
 import com.joshgm3z.downloader.viewmodel.AddDownloadViewModel
 import com.joshgm3z.downloader.viewmodel.AddUiState
 
@@ -203,7 +204,7 @@ fun FileMetadata(modifier: Modifier = Modifier, downloadTask: DownloadTask) {
     Column(modifier = modifier.padding(10.dp)) {
         InfoTag("File name", downloadTask.filename)
         val metadataList = linkedMapOf(
-            "File size" to downloadTask.totalSize.toString(),
+            "File size" to downloadTask.totalSize.sizeText(),
             "File type" to downloadTask.fileType.name,
         )
         LazyVerticalGrid(

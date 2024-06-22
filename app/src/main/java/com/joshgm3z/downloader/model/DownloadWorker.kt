@@ -60,10 +60,11 @@ class DownloadWorker @Inject constructor(
         return "$downloads/${downloadTask.filename}"
     }
 
-    private fun notifyProgress(state: DownloadState, progress: Long, currentSize: Long) {
-        Logger.debug("state = [${state}], progress = [${progress}], currentSize = [${currentSize}]")
+    private fun notifyProgress(state: DownloadState, currentSize: Long) {
+        Logger.debug("state = [${state}], currentSize = [${currentSize}]")
         _downloadTaskFlow.update {
-            it?.copy(
+            val progress = ((currentSize * 100) / it!!.totalSize)
+            it.copy(
                 progress = progress,
                 state = state,
                 currentSize = currentSize
@@ -74,27 +75,24 @@ class DownloadWorker @Inject constructor(
     private fun ResponseBody.saveFile(destinationPath: String) {
         val file = File(destinationPath)
         var progressBytes: Long = 0
-        var progress: Long
+        notifyProgress(DownloadState.RUNNING, progressBytes)
         try {
             byteStream().use { inputStream ->
                 file.outputStream().use { outputStream ->
-                    val totalBytes = contentLength()
-                    notifyStart(totalBytes)
                     val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                     var bytes = inputStream.read(buffer)
                     while (bytes >= 0) {
                         outputStream.write(buffer, 0, bytes)
                         progressBytes += bytes
                         bytes = inputStream.read(buffer)
-                        progress = ((progressBytes * 100) / totalBytes)
-                        notifyProgress(DownloadState.RUNNING, progress, progressBytes)
+                        notifyProgress(DownloadState.RUNNING, progressBytes)
                     }
                 }
             }
             notifyCompletion(progressBytes, destinationPath)
         } catch (e: Exception) {
             Logger.error(e.message ?: "Download failed with exception")
-            notifyProgress(DownloadState.FAILED, 100, 0)
+            notifyProgress(DownloadState.FAILED, progressBytes)
         }
     }
 
@@ -105,16 +103,6 @@ class DownloadWorker @Inject constructor(
                 state = DownloadState.COMPLETED,
                 totalSize = totalBytes,
                 localPath = path
-            )
-        }
-    }
-
-    private fun notifyStart(totalBytes: Long) {
-        Logger.debug("totalBytes = [${totalBytes}]")
-        _downloadTaskFlow.update {
-            it?.copy(
-                state = DownloadState.RUNNING,
-                totalSize = totalBytes,
             )
         }
     }

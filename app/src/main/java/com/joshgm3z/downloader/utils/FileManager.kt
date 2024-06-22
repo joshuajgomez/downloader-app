@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import com.joshgm3z.downloader.model.room.data.DownloadTask
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class FileManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+
     private fun openFile(downloadTask: DownloadTask) {
         try {
             val file = File(

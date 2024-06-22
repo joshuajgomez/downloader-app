@@ -11,12 +11,12 @@ data class DownloadTask(
     val id: Int,
     val url: String,
     val filename: String,
-    val totalSize: Long,
+    var totalSize: Long,
     val currentSize: Long,
     val progress: Long,
     val state: DownloadState,
     val fileType: FileType,
-    val mime: String,
+    var mime: String,
     val localPath: String,
 ) {
     companion object {
