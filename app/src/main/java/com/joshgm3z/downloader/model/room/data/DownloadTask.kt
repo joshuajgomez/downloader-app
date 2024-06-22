@@ -18,7 +18,10 @@ data class DownloadTask(
     val fileType: FileType,
     var mime: String,
     val localPath: String,
-) {
+    val timeAdded: Long,
+    val timeStarted: Long,
+    val timeCompleted: Long,
+    ) {
     companion object {
         fun new(url: String): DownloadTask = DownloadTask(
             id = 0,
@@ -30,19 +33,23 @@ data class DownloadTask(
             state = DownloadState.PENDING,
             fileType = url.fileType(),
             mime = "unknown",
-            localPath = "unknown"
+            localPath = "unknown",
+            timeAdded = 102120210212012,
+            timeStarted = 102120210212012,
+            timeCompleted = 1220227200,
         )
 
         val sample: DownloadTask
             get() {
                 val url = sampleUrls.random()
-                val totalSize = sampleFileSizes.random()
-                val currentSize = totalSize - Random.nextLong(totalSize)
+                val totalSize = 123238833L
+                val currentSize = totalSize - 123238
                 return new(url).copy(
                     totalSize = totalSize,
                     currentSize = currentSize,
-                    progress = (currentSize / totalSize) * 100,
+                    progress = 34,
                     state = DownloadState.entries.random(),
+                    mime = "media/song"
                 )
             }
 
@@ -93,14 +100,6 @@ private val sampleUrls: List<String> = listOf(
     "https://www.example.com/certificate.pdf",
     "https://www.example.com/install_me.exe",
     "https://www.example.com/that report.txt",
-)
-
-private val sampleFileSizes: List<Long> = listOf(
-    100,
-    200,
-    300,
-    400,
-    500,
 )
 
 enum class DownloadState {

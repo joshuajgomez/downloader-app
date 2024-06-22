@@ -12,4 +12,5 @@ enum class LayoutId {
     cardTitle,
     textInput,
     recentList,
+    metadata,
 }

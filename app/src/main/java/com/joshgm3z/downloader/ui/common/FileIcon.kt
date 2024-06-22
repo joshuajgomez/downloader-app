@@ -43,12 +43,15 @@ fun PreviewFileIcon() {
 }
 
 @Composable
-fun FileIcon(fileType: FileType) {
+fun FileIcon(
+    fileType: FileType,
+    modifier: Modifier = Modifier
+) {
     Icon(
         imageVector = fileIcon(fileType),
         contentDescription = null,
         tint = MaterialTheme.colorScheme.primaryContainer,
-        modifier = Modifier
+        modifier = modifier
             .layoutId(LayoutId.icon)
             .background(
                 shape = RoundedCornerShape(10.dp),

@@ -1,5 +1,6 @@
 package com.joshgm3z.downloader.ui
 
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedVisibility
@@ -199,6 +200,14 @@ fun Added() {
     }
 }
 
+@Preview
+@Composable
+fun PreviewFileMetadata() {
+    DownloaderTheme {
+        FileMetadata(downloadTask = DownloadTask.sample)
+    }
+}
+
 @Composable
 fun FileMetadata(modifier: Modifier = Modifier, downloadTask: DownloadTask) {
     Column(modifier = modifier.padding(10.dp)) {
@@ -206,6 +215,7 @@ fun FileMetadata(modifier: Modifier = Modifier, downloadTask: DownloadTask) {
         val metadataList = linkedMapOf(
             "File size" to downloadTask.totalSize.sizeText(),
             "File type" to downloadTask.fileType.name,
+            "MIME type" to downloadTask.mime,
         )
         LazyVerticalGrid(
             columns = GridCells.Adaptive(100.dp),

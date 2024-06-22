@@ -57,7 +57,7 @@ fun DownloadTaskList(
             )
         ) {
             items(downloadTasks) {
-                DownloadTaskItem(it)
+                DownloadItem(it)
             }
         }
     }

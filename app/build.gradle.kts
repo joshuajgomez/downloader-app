@@ -85,4 +85,5 @@ dependencies {
     kapt(libs.androidx.room.compiler)
 
     testImplementation(libs.mockk)
+    implementation(libs.joda.time)
 }
