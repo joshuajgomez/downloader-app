@@ -13,7 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Database(entities = [DownloadTask::class], version = 3, exportSchema = false)
+@Database(entities = [DownloadTask::class], version = 4, exportSchema = false)
 abstract class RoomDb : RoomDatabase() {
     abstract fun downloadTaskDao(): DownloadTaskDao
 }

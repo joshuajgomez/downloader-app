@@ -17,6 +17,7 @@ data class DownloadTask(
     val state: DownloadState,
     val fileType: FileType,
     val mime: String,
+    val localPath: String,
 ) {
     companion object {
         fun new(url: String): DownloadTask = DownloadTask(
@@ -28,7 +29,8 @@ data class DownloadTask(
             progress = 0,
             state = DownloadState.PENDING,
             fileType = url.fileType(),
-            mime = "unknown"
+            mime = "unknown",
+            localPath = "unknown"
         )
 
         val sample: DownloadTask
@@ -62,8 +64,9 @@ data class DownloadTask(
                 "currentSize=$currentSize, " +
                 "progress=$progress, " +
                 "state=$state, " +
-                "fileType=$fileType," +
-                "mime=$mime," +
+                "fileType=$fileType, " +
+                "mime=$mime, " +
+                "localPath=${localPath}, " +
                 ")"
     }
 

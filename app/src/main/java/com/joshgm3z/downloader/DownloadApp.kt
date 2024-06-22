@@ -2,7 +2,7 @@ package com.joshgm3z.downloader
 
 import android.app.Application
 import android.content.Intent
-import com.joshgm3z.downloader.service.DownloadService
+import com.joshgm3z.downloader.service.DownzillaService
 import com.joshgm3z.downloader.utils.Logger
 import dagger.hilt.android.HiltAndroidApp
 
@@ -13,7 +13,7 @@ class DownloadApp : Application() {
         super.onCreate()
 
         Logger.debug("starting downloadservice")
-        Intent(this, DownloadService::class.java).apply {
+        Intent(this, DownzillaService::class.java).apply {
             startService(this)
         }
     }
