@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +27,7 @@ fun PreviewCustomTextField() {
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
-    text: String = "Heyy",
+    text: String = "",
     maxLines: Int = 3,
     onTextChanged: (text: String) -> Unit = {},
 ) {
@@ -37,7 +38,8 @@ fun CustomTextField(
                 shape = MaterialTheme.shapes.extraLarge,
             )
             .padding(horizontal = 20.dp, vertical = 10.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .layoutId(LayoutId.textInput),
         value = text,
         onValueChange = {
             if ("\n" !in it) onTextChanged(it)

@@ -16,58 +16,71 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.joshgm3z.downloader.ui.common.CustomTextField
+import com.joshgm3z.downloader.ui.common.DarkPreview
 import com.joshgm3z.downloader.ui.common.DeleteIcon
+import com.joshgm3z.downloader.ui.common.LayoutId
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.ui.theme.jumperFamily
 import com.joshgm3z.downloader.viewmodel.DeleteDownloadViewModel
 
-@Preview(showBackground = true)
+@DarkPreview
 @Composable
 fun PreviewTitleBar() {
     DownloaderTheme {
-        Column {
-            TitleBar()
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        TitleBar()
     }
 }
 
 @Composable
 fun TitleBar(deleteDownloadViewModel: DeleteDownloadViewModel = hiltViewModel()) {
-    Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            topEnd = 0.dp,
-            bottomStart = 20.dp,
-            bottomEnd = 20.dp
-        )
+    ConstraintLayout(
+        titleBarConstraints(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = colorScheme.primary)
-                .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Downzilla",
-                fontSize = 25.sp,
-                fontFamily = jumperFamily,
-                fontStyle = FontStyle.Italic,
-                fontWeight = FontWeight.Bold,
-                color = colorScheme.onPrimary
-            )
-            DeleteIcon {
-                deleteDownloadViewModel.deleteAll()
-            }
+        Text(
+            text = "Downzilla",
+            fontSize = 25.sp,
+            fontFamily = jumperFamily,
+            fontStyle = FontStyle.Italic,
+            fontWeight = FontWeight.Bold,
+            color = colorScheme.onSurface,
+            modifier = Modifier.layoutId(LayoutId.title)
+        )
+        DeleteIcon {
+            deleteDownloadViewModel.deleteAll()
         }
+        CustomTextField()
+    }
+}
+
+private fun titleBarConstraints() = ConstraintSet {
+    val title = createRefFor(LayoutId.title)
+    val delete = createRefFor(LayoutId.deleteIcon)
+    val search = createRefFor(LayoutId.textInput)
+    constrain(title) {
+        top.linkTo(parent.top, 5.dp)
+        start.linkTo(parent.start)
+    }
+    constrain(delete){
+        top.linkTo(title.top)
+        bottom.linkTo(title.bottom)
+        end.linkTo(parent.end)
+    }
+    constrain(search){
+        top.linkTo(title.bottom, 20.dp)
+        start.linkTo(title.start)
     }
 }

@@ -14,10 +14,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import com.joshgm3z.downloader.ui.common.DarkPreview
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.utils.Logger
 
-@Preview
+@DarkPreview
 @Composable
 private fun PreviewMainUi() {
     DownloaderTheme {

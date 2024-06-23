@@ -13,4 +13,7 @@ enum class LayoutId {
     textInput,
     recentList,
     metadata,
+    title,
+    deleteIcon,
+    searchBox,
 }

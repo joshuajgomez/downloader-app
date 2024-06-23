@@ -1,22 +1,27 @@
 package com.joshgm3z.downloader.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.joshgm3z.downloader.model.room.data.DownloadState
 import com.joshgm3z.downloader.model.room.data.DownloadTask
+import com.joshgm3z.downloader.ui.common.DarkPreview
 import com.joshgm3z.downloader.ui.common.isPreview
 import com.joshgm3z.downloader.ui.theme.DownloaderTheme
 import com.joshgm3z.downloader.viewmodel.DownloadsListViewModel
 
-@Preview
+@DarkPreview
 @Composable
 fun PreviewDownloadTaskListContainer() {
     DownloaderTheme {
@@ -39,6 +44,7 @@ fun DownloadTaskListContainer(
     DownloadTaskList(downloadTasks, paddingValues)
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DownloadTaskList(
     downloadTasks: List<DownloadTask> = DownloadTask.samples,
@@ -56,9 +62,23 @@ fun DownloadTaskList(
                 top = 10.dp
             )
         ) {
-            items(downloadTasks) {
-                DownloadItem(it)
-            }
+            downloadTasks
+                .sortedBy { it.state }
+                .groupBy { it.state }
+                .forEach { (state, downloadTasks) ->
+                    stickyHeader {
+                        SubHeader(state)
+                    }
+                    items(downloadTasks) {
+                        DownloadItem(it)
+                    }
+                }
+
         }
     }
+}
+
+@Composable
+fun SubHeader(state: DownloadState) {
+    Text(text = state.name, color = colorScheme.onSurface.copy(alpha = 0.5f))
 }

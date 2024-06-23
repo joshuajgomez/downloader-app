@@ -8,6 +8,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 
 @Composable
 fun CloseIcon(modifier: Modifier, onClick: () -> Unit) {
@@ -27,12 +28,12 @@ fun DeleteIcon(
     onClick: () -> Unit
 ) {
     IconButton(
-        modifier = modifier,
+        modifier = modifier.layoutId(LayoutId.deleteIcon),
         onClick = { onClick() }) {
         Icon(
             imageVector = Icons.Default.Delete,
             contentDescription = null,
-            tint = colorScheme.onPrimary
+            tint = colorScheme.onSurface
         )
     }
 }

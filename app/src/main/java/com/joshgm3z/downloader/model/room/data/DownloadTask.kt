@@ -88,12 +88,12 @@ private val sampleUrls: List<String> = listOf(
 )
 
 enum class DownloadState {
-    PENDING,
     RUNNING,
-    PAUSED,
+    PENDING,
+    STOPPED,
     COMPLETED,
     FAILED,
-    STOPPED,
+    PAUSED,
 }
 
 enum class FileType {
