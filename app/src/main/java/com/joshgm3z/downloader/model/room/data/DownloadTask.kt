@@ -43,7 +43,7 @@ data class DownloadTask(
             get() {
                 val url = sampleUrls.random()
                 val totalSize = 123238833L
-                val currentSize = totalSize - 123238
+                val currentSize = 23323814L
                 return new(url).copy(
                     totalSize = totalSize,
                     currentSize = currentSize,
@@ -93,6 +93,7 @@ enum class DownloadState {
     PAUSED,
     COMPLETED,
     FAILED,
+    STOPPED,
 }
 
 enum class FileType {

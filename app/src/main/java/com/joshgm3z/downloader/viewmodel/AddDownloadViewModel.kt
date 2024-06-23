@@ -35,12 +35,10 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var onlineRepository: OnlineRepository
 
-    fun onDownloadClick() {
+    fun onDownloadClick(url: String) {
         viewModelScope.launch {
-            downloadTask?.let {
-                downloadRepository.addDownload(it)
-                _uiState.value = AddUiState.Added()
-            } ?: Logger.warn("downloadTask is null")
+            downloadRepository.addDownload(downloadTask ?: DownloadTask.new(url))
+            _uiState.value = AddUiState.Added()
         }
     }
 
@@ -49,6 +47,7 @@ class AddDownloadViewModel @Inject constructor() : ViewModel() {
             _uiState.value = AddUiState.Init()
             return
         }
+
         _uiState.value = AddUiState.Fetching()
         viewModelScope.launch {
             onlineRepository.checkUrl(url,

@@ -109,7 +109,7 @@ fun NewDownload(
             )
             Button(
                 onClick = {
-                    addDownloadViewModel.onDownloadClick()
+                    addDownloadViewModel.onDownloadClick(text)
                 },
                 modifier = Modifier
                     .padding(10.dp),

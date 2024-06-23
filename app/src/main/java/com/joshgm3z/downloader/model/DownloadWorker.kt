@@ -39,6 +39,18 @@ class DownloadWorker @Inject constructor(
     private val _downloadTaskFlow = MutableStateFlow<DownloadTask?>(null)
     val downloadTaskFlow: StateFlow<DownloadTask?> = _downloadTaskFlow
 
+    var isStopped = false
+        set(value) {
+            field = value
+            if (value) {
+                _downloadTaskFlow.update {
+                    it?.copy(
+                        state = DownloadState.STOPPED
+                    )
+                }
+            }
+        }
+
     fun download(
         downloadTask: DownloadTask,
     ) {
@@ -62,7 +74,10 @@ class DownloadWorker @Inject constructor(
 
     private fun notifyProgress(currentSize: Long) {
         _downloadTaskFlow.update {
-            val progress = ((currentSize * 100) / it!!.totalSize)
+            val progress =
+                if (it!!.totalSize > 0)
+                    ((currentSize * 100) / it.totalSize)
+                else 0
             it.copy(
                 progress = progress,
                 currentSize = currentSize
@@ -80,11 +95,20 @@ class DownloadWorker @Inject constructor(
                     val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                     var bytes = inputStream.read(buffer)
                     while (bytes >= 0) {
+                        if (isStopped) {
+                            close()
+                            return@use
+                        }
                         outputStream.write(buffer, 0, bytes)
                         currentSize += bytes
                         bytes = inputStream.read(buffer)
                         notifyProgress(currentSize)
                     }
+                }
+                if (isStopped) {
+                    close()
+                    Logger.debug("Download stopped: ${_downloadTaskFlow.value}")
+                    return
                 }
             }
             notifyCompletion(currentSize, destinationPath)
